@@ -25,7 +25,7 @@ def PLAYVIDEO(name, swf, rts, path):
     i=xbmcgui.ListItem(name)
     i.setProperty("SWFPlayer", swf)
     i.setProperty("PlayPath", path)
-    xbmc.Player(xbmc.PLAYER_CORE_DVDPLAYER).play(rts, i)
+    xbmc.Player(xbmc.PLAYER_CORE_AUTO).play(rts, i)
 
 def PLAYINTER():
     PLAYVIDEO('Inter', 'http://inter.ua/images/player.swf?v5.2.1151', 'rtmp://62.149.26.237:80/tv', 'mp4:inter')
