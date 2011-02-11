@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+	<setting id="use_http_proxy" label="30000" type="bool" default="true" />
+	<setting id="http_proxy" label="30001" type="text" default="http://192.168.10.1:4022" />
+</settings>
