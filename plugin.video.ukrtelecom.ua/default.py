@@ -3,7 +3,7 @@
 import urllib2, re, xbmcaddon, string, xbmc, xbmcgui, xbmcplugin, os, urllib
 
 __settings__ = xbmcaddon.Addon(id='plugin.video.ukrtelecom.ua')
-PLAYLIST   = os.path.join( os.getcwd(), "resources", "iptv.m3u" );
+PLAYLIST   = os.path.join( os.getcwd(), "resources", "playlist", "iptv.m3u" );
 
 handle = int(sys.argv[1])
 site_thumb   = os.path.join( os.getcwd(), "default.tbn" )
@@ -42,12 +42,13 @@ def get_programs():
 
 	start_prog = re.compile('#EXTINF:0,(.*?)\n(.*?)\n', re.MULTILINE | re.DOTALL).findall(a)
 	x = 2
+	total_items = len(start_prog)
 	if len(start_prog) > 0:
 		for ChannelInfo, ItemUrl in start_prog:
-			ChannelData = re.compile('([0-9]+)\s(.*)',re.DOTALL).findall(ChannelInfo)
+			ChannelData = re.compile('([0-9]+)\s(.*)\s@(.*)@',re.DOTALL).findall(ChannelInfo)
 			if len(ChannelData) > 0:
-				for ChannelId, ChannelName in ChannelData:
-					image_url = os.path.join(os.getcwd(), 'resources', 'icons', str(ChannelId) + '.png');
+				for ChannelId, ChannelName, ChannelLogo in ChannelData:
+					image_url = os.path.join(os.getcwd(), 'resources', 'icons', ChannelLogo);
 					use_proxy = __settings__.getSetting('use_http_proxy');
 					http_proxy = __settings__.getSetting('http_proxy');
 					if (use_proxy == "true"):
@@ -56,13 +57,14 @@ def get_programs():
 					    video_url = ItemUrl
 					cln_title = clean(ChannelName)
 					Plot = clean(ChannelName)
-					listitem=xbmcgui.ListItem(str(ChannelId)+'. '+cln_title,iconImage=image_url,thumbnailImage=image_url)
+					listitem=xbmcgui.ListItem(cln_title,iconImage=image_url,thumbnailImage=image_url)
 					listitem.setInfo(type="Video", infoLabels = {
-						"Title": 	str(ChannelId)+'. '+cln_title,
+						"Title": 	cln_title,
 						"Studio": 	'UKRTELECOM.UA',
 						"Director": 	video_url,
 						"Plot": 	Plot })
-					xbmcplugin.addDirectoryItem(handle, video_url, listitem, False)
+					listitem.setProperty('IsPlayable', 'true')
+					xbmcplugin.addDirectoryItem(handle, video_url, listitem, False, total_items)
 					x += 1
 
 params = get_params()
